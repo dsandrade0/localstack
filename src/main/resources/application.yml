@@ -1,0 +1,13 @@
+spring:
+  main:
+    allow-bean-definition-overriding: true
+
+client:
+  viacep:
+    url: https://viacep.com.br/ws
+
+#logging:
+#  level:
+#    io:
+#      awspring:
+#        cloud: debug

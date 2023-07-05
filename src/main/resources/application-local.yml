@@ -1,0 +1,30 @@
+spring:
+  main:
+    allow-bean-definition-overriding: true
+
+  cloud:
+    aws:
+      account: '000000000000'
+      stack:
+        auto: false
+      region:
+        static: us-east-1
+      credentials:
+        access-key: 12345
+        secret-key: 12345
+      endpoint: http://localhost:4566
+    sqs:
+      contratacao:
+        fila:
+          nome: http://localhost:4566/000000000000/DEV_CONTRATACAO
+
+
+client:
+  viacep:
+    url: https://viacep.com.br/ws
+
+#logging:
+#  level:
+#    io:
+#      awspring:
+#        cloud: debug
