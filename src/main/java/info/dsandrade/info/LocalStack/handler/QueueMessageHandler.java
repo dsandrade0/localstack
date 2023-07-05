@@ -16,7 +16,7 @@ public class QueueMessageHandler {
     @Autowired
     private ViacepClient client;
 
-    @SqsListener({"DEV_CONTRATACAO"})
+    @SqsListener(value = {"DEV_CONTRATACAO"})
     public void processMessage(Message message) throws JsonProcessingException {
         ObjectMapper objectMapper = new ObjectMapper();
 
