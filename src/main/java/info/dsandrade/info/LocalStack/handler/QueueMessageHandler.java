@@ -1,29 +1,42 @@
 package info.dsandrade.info.LocalStack.handler;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import info.dsandrade.info.LocalStack.client.ViacepClient;
+import info.dsandrade.info.LocalStack.converter.TopicMessage;
 import info.dsandrade.info.LocalStack.model.Contrato;
 import info.dsandrade.info.LocalStack.model.Endereco;
 import io.awspring.cloud.sqs.annotation.SqsListener;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.Message;
 import org.springframework.stereotype.Component;
-import software.amazon.awssdk.services.sqs.model.Message;
+import software.amazon.awssdk.services.sqs.SqsClient;
+import software.amazon.awssdk.services.sqs.model.SendMessageRequest;
 
 @Component
 public class QueueMessageHandler {
+    private static final Logger LOG = LoggerFactory.getLogger(QueueMessageHandler.class);
 
     @Autowired
     private ViacepClient client;
 
-    @SqsListener(value = {"DEV_CONTRATACAO"})
-    public void processMessage(Message message) throws JsonProcessingException {
+    @SqsListener(value = {"${spring.cloud.sqs.contratacao}"})
+    public void processMessage(Message<TopicMessage> message) throws Exception {
         ObjectMapper objectMapper = new ObjectMapper();
+        Contrato contrato = objectMapper.readValue(message.getPayload().body(), Contrato.class);
 
-        Contrato contrato = objectMapper.readValue(message.body(), Contrato.class);
+        Endereco endereco = client.consultaCep(contrato.cep());
+        LOG.info("Fila 1 " + endereco.toString());
+    }
 
-        String response = client.consultaCep(contrato.cep());
-        Endereco endereco = objectMapper.readValue(response, Endereco.class);
-        System.out.println(endereco);
+
+    @SqsListener(value = {"${spring.cloud.sqs.bemVindo}"})
+    public void processMessageTwo(Message<TopicMessage> message) throws Exception {
+        ObjectMapper objectMapper = new ObjectMapper();
+        Contrato contrato = objectMapper.readValue(message.getPayload().body(), Contrato.class);
+
+        Endereco endereco = client.consultaCep(contrato.cep());
+        LOG.info("Fila bem vindo " + endereco.toString());
     }
 }

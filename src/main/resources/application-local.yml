@@ -14,9 +14,8 @@ spring:
         secret-key: 12345
       endpoint: http://localhost:4566
     sqs:
-      contratacao:
-        fila:
-          nome: http://localhost:4566/000000000000/DEV_CONTRATACAO
+      contratacao: DEV_CONTRATACAO
+      bemVindo: DEV_CONTRATACAO_BEM_VINDO
 
 
 client:
